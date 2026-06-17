@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronograma ENEM Completo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:#f4f7fc;color:#333}
+header{background:linear-gradient(135deg,#003366,#0055aa);color:#fff;text-align:center;padding:40px}
+header h1{font-size:3rem}
+.dashboard,.estatisticas{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;padding:30px}
+.card,.card-estatistica,.meta{background:#fff;padding:20px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.card{width:350px}
+.barra{height:30px;background:#ddd;border-radius:20px;overflow:hidden;margin-top:10px}
+.preenchimento{width:65%;height:100%;background:#00c853;color:#fff;display:flex;align-items:center;justify-content:center}
+section{padding:30px}
+h2{margin-bottom:20px;color:#003366}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{border:1px solid #ddd;padding:12px;text-align:center}
+th{background:#003366;color:#fff}
+.tabela-container{overflow:auto}
+.cards-metas{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
+.form-questoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:20px}
+input,select,button{padding:12px;border-radius:8px;border:1px solid #ccc}
+button{background:#003366;color:white;border:none;cursor:pointer}
+footer{background:#003366;color:#fff;text-align:center;padding:20px;margin-top:30px}
+.card-estatistica{text-align:center;min-width:220px}
+.card-estatistica span{font-size:2rem;font-weight:bold;color:#00c853}
+@media(max-width:768px){header h1{font-size:2rem}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>📚 Cronograma de Estudos ENEM</h1>
+<p>Planeje seus estudos e acompanhe sua evolução.</p>
+</header>
+
+<section class="dashboard">
+<div class="card">
+<h2>🎯 Progresso Geral</h2>
+<div class="barra"><div class="preenchimento">65%</div></div>
+</div>
+<div class="card">
+<h2>🔥 Meta Principal</h2>
+<p>Estudar 4 horas por dia e fazer 1 redação por semana.</p>
+</div>
+</section>
+
+<section>
+<h2>📅 Cronograma Semanal</h2>
+<div class="tabela-container">
+<table>
+<tr><th>Horário</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th></tr>
+<tr><td>08:00-09:30</td><td>Matemática</td><td>Português</td><td>Matemática</td><td>Química</td><td>Português</td><td>Simulado</td></tr>
+<tr><td>10:00-11:30</td><td>Física</td><td>Biologia</td><td>História</td><td>Matemática</td><td>Geografia</td><td>Correção</td></tr>
+<tr><td>14:00-15:30</td><td>Redação</td><td>Química</td><td>Biologia</td><td>Português</td><td>Física</td><td>Revisão</td></tr>
+<tr><td>16:00-17:30</td><td>Geografia</td><td>História</td><td>Filosofia</td><td>Sociologia</td><td>Redação</td><td>Questões</td></tr>
+</table>
+</div>
+</section>
+
+<section>
+<h2>🏆 Metas da Semana</h2>
+<div class="cards-metas">
+<div class="meta"><input type="checkbox"> Resolver 100 questões de Matemática</div>
+<div class="meta"><input type="checkbox"> Fazer 2 redações</div>
+<div class="meta"><input type="checkbox"> Revisar Biologia</div>
+<div class="meta"><input type="checkbox"> Assistir 5 aulas de Física</div>
+</div>
+</section>
+
+<section>
+<h2>✍️ Controle de Redações</h2>
+<table>
+<tr><th>Tema</th><th>Data</th><th>Nota</th></tr>
+<tr><td>Inclusão Digital</td><td>05/05/2026</td><td>920</td></tr>
+<tr><td>Saúde Mental</td><td>12/05/2026</td><td>960</td></tr>
+</table>
+</section>
+
+<section class="questoes">
+<h2>📊 Registro Diário de Questões</h2>
+
+<div class="form-questoes">
+<input type="date" id="dataQuestao">
+<select id="disciplina">
+<option>Matemática</option><option>Português</option><option>Biologia</option>
+<option>Física</option><option>Química</option><option>História</option>
+<option>Geografia</option>
+</select>
+<input type="number" id="questoesFeitas" placeholder="Questões Resolvidas">
+<input type="number" id="acertos" placeholder="Acertos">
+<button onclick="registrarQuestoes()">Registrar</button>
+</div>
+
+<div class="estatisticas">
+<div class="card-estatistica"><h3>Total de Questões</h3><span id="totalQuestoes">0</span></div>
+<div class="card-estatistica"><h3>Total de Acertos</h3><span id="totalAcertos">0</span></div>
+<div class="card-estatistica"><h3>Aproveitamento</h3><span id="mediaGeral">0%</span></div>
+</div>
+
+<div class="tabela-container">
+<table id="tabelaQuestoes">
+<thead>
+<tr><th>Data</th><th>Disciplina</th><th>Questões</th><th>Acertos</th><th>%</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</section>
+
+<footer>© 2026 - Planejamento ENEM</footer>
+
+<script>
+let registros=JSON.parse(localStorage.getItem("registrosENEM"))||[];
+
+function registrarQuestoes(){
+const data=document.getElementById("dataQuestao").value;
+const disciplina=document.getElementById("disciplina").value;
+const questoes=Number(document.getElementById("questoesFeitas").value);
+const acertos=Number(document.getElementById("acertos").value);
+
+if(!data||!questoes||acertos<0){alert("Preencha todos os campos.");return;}
+
+registros.push({data,disciplina,questoes,acertos});
+localStorage.setItem("registrosENEM",JSON.stringify(registros));
+atualizarTabela();
+}
+
+function atualizarTabela(){
+const tbody=document.querySelector("#tabelaQuestoes tbody");
+tbody.innerHTML="";
+let tq=0,ta=0;
+
+registros.forEach(r=>{
+tq+=r.questoes; ta+=r.acertos;
+const ap=((r.acertos/r.questoes)*100).toFixed(1);
+tbody.innerHTML+=`<tr><td>${r.data}</td><td>${r.disciplina}</td><td>${r.questoes}</td><td>${r.acertos}</td><td>${ap}%</td></tr>`;
+});
+
+document.getElementById("totalQuestoes").textContent=tq;
+document.getElementById("totalAcertos").textContent=ta;
+document.getElementById("mediaGeral").textContent=tq?((ta/tq)*100).toFixed(1)+"%":"0%";
+}
+
+atualizarTabela();
+</script>
+
+</body>
+</html>
